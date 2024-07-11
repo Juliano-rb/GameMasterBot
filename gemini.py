@@ -1,4 +1,5 @@
 import google.generativeai as genai
+from google.ai.generativelanguage_v1beta.types.content import Content, Part
 import os
 import pprint
 
@@ -58,22 +59,44 @@ class GeminiClient:
 
         return response.text
 
-    def chat(self, prompt):
+    def load_history(self, history_data):
+        history_parsed = []
+        for message in history_data:
+            content = Content(
+                parts=[
+                    Part(
+                        text=message["content"],
+                    )
+                ],
+                role=message["role"],
+            )
+            history_parsed.append(content)
+        return history_parsed
+
+    def chat(self, prompt, history_data=None):
         """
         Get a chat response from model. Stores conversation history.
 
         Args:
             prompt (str): The message prompt.
+            history_data (list): Lista de dicionários representando o histórico.
+                                  Ex: [{"role": "user", "content": "Olá"},
+                                       {"role": "model", "content": "Oi!"}]
 
         Returns:
             text: the current prompt output, as str, of the model.
         """
+        history = []
+        if history_data:
+            history = self.load_history(history_data)
+
         try:
             if not self.chat_instance:
-                self.chat_instance = self.model.start_chat(history=[])
+                self.chat_instance = self.model.start_chat(history=history)
             response = self.chat_instance.send_message(
                 prompt, safety_settings=self.safety_settings
             )
+
             return response.text
         except Exception as e:
             raise e
