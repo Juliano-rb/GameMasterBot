@@ -9,6 +9,7 @@ from telegram.ext import (
 )
 from dotenv import load_dotenv
 import os
+from database import Database
 from gemini import GeminiClient
 
 load_dotenv()
@@ -20,6 +21,7 @@ logging.basicConfig(
 )
 
 gemini = GeminiClient()
+database = Database()
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -31,7 +33,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message.text
-    response = gemini.chat(message)
+    chatid = update.effective_chat.id
+    chat_history = database.get(chatid)
+
+    response, updated_history = gemini.chat(message, history_data=chat_history)
+
+    database.set(chatid, updated_history)
+
     await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 

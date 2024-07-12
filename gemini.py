@@ -32,7 +32,6 @@ class GeminiClient:
         self.model = genai.GenerativeModel(
             "gemini-1.5-flash-latest",
         )
-        self.chat_instance = None
 
     def list_models(self):
         for model in genai.list_models():
@@ -59,19 +58,17 @@ class GeminiClient:
 
         return response.text
 
-    def load_history(self, history_data):
-        history_parsed = []
-        for message in history_data:
-            content = Content(
-                parts=[
-                    Part(
-                        text=message["content"],
-                    )
-                ],
-                role=message["role"],
-            )
-            history_parsed.append(content)
-        return history_parsed
+    def load_history_from_dict(self, history_data):
+        return [
+            Content(parts=[Part(text=message["content"])], role=message["role"])
+            for message in history_data
+        ]
+
+    def history_to_dict(self, history):
+        return [
+            {"role": message.role, "content": message.parts[0].text}
+            for message in history
+        ]
 
     def chat(self, prompt, history_data=None):
         """
@@ -79,7 +76,7 @@ class GeminiClient:
 
         Args:
             prompt (str): The message prompt.
-            history_data (list): Lista de dicionários representando o histórico.
+            history_data (list): List of dicts representing chat history.
                                   Ex: [{"role": "user", "content": "Olá"},
                                        {"role": "model", "content": "Oi!"}]
 
@@ -88,15 +85,14 @@ class GeminiClient:
         """
         history = []
         if history_data:
-            history = self.load_history(history_data)
+            history = self.load_history_from_dict(history_data)
 
         try:
-            if not self.chat_instance:
-                self.chat_instance = self.model.start_chat(history=history)
-            response = self.chat_instance.send_message(
+            chat_instance = self.model.start_chat(history=history)
+            response = chat_instance.send_message(
                 prompt, safety_settings=self.safety_settings
             )
 
-            return response.text
+            return response.text, self.history_to_dict(chat_instance.history)
         except Exception as e:
             raise e
