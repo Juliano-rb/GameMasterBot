@@ -27,7 +27,7 @@ database = Database()
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Welcome to Game Master Bot. I can run RPG campaigns for you.",
+        text="Welcome to Game Master Bot. I can run RPG campaigns for you. \n\nJust reply this message with your commands.",
     )
 
 
@@ -45,9 +45,12 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 if __name__ == "__main__":
     application = ApplicationBuilder().token(BOT_TOKEN).build()
+    start_handler = CommandHandler(["start", "iniciar"], start)
+    message_handler = MessageHandler(
+        filters.REPLY & (~filters.COMMAND), reply
+    )  # in groups should only responde when mentioned or replied
+    # message_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), reply)
 
-    start_handler = CommandHandler("start", start)
-    message_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), reply)
     application.add_handler(start_handler)
     application.add_handler(message_handler)
 
