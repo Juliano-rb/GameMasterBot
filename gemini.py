@@ -7,8 +7,8 @@ import pprint
 class GeminiClient:
     def __init__(self):
         self.api_key = os.getenv("GOOGLE_API_KEY")
-        self.model = os.getenv("GEMINI_MODEL") or "gemini-1.5-flash-latest"
-        print(f"Using Gemini model: {self.model}")
+        self.model_name = os.getenv("GEMINI_MODEL") or "gemini-1.5-flash-latest"
+        print(f"Using Gemini model: {self.model_name}")
         genai.configure(api_key=self.api_key)
         self.safety_settings = [
             {
@@ -30,7 +30,7 @@ class GeminiClient:
         ]
 
         self.model = genai.GenerativeModel(
-            "gemini-1.5-flash-latest",
+            self.model_name,
         )
 
     def list_models(self):
