@@ -56,15 +56,33 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 
+async def all_messages_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message = update.message.text
+    reply_to_message = update.message.reply_to_message
+    is_reply_to_me = (
+        reply_to_message.from_user.id == context.bot.id if reply_to_message else None
+    )
+    bot_name = context.bot.username
+    in_group = (
+        update.message.chat.type == "group" or update.message.chat.type == "supergroup"
+    )
+
+    if not in_group:
+        return await reply(update, context)
+
+    if bot_name in message or is_reply_to_me:
+        return await reply(update, context)
+
 if __name__ == "__main__":
     application = ApplicationBuilder().token(BOT_TOKEN).build()
     start_handler = CommandHandler(["start", "iniciar"], start)
-    message_handler = MessageHandler(
-        filters.REPLY & (~filters.COMMAND), reply
-    )  # in groups should only responde when mentioned or replied
-    # message_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), reply)
+    narrator_command = CommandHandler(["narrador", "narrator"], reply)
+    messageHanlder = MessageHandler(
+        filters.TEXT & (~filters.COMMAND), all_messages_handler
+    )
 
     application.add_handler(start_handler)
-    application.add_handler(message_handler)
+    application.add_handler(narrator_command)
+    application.add_handler(messageHanlder)
 
     application.run_polling()
