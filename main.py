@@ -45,11 +45,15 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatid = update.effective_chat.id
     chat_history = database.get(chatid)
 
-    response, updated_history = gemini.chat(message, history_data=chat_history)
-
-    database.set(chatid, updated_history)
-
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+    try:
+        response, updated_history = gemini.chat(message, history_data=chat_history)
+        database.set(chatid, updated_history)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+    except:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Um erro ocorreu.",
+        )
 
 
 if __name__ == "__main__":
