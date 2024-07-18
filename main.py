@@ -6,6 +6,7 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     filters,
+    Application,
 )
 from dotenv import load_dotenv
 import os
@@ -73,8 +74,26 @@ async def all_messages_handler(update: Update, context: ContextTypes.DEFAULT_TYP
     if bot_name in message or is_reply_to_me:
         return await reply(update, context)
 
+
+async def post_init(application: Application) -> None:
+    await application.bot.set_my_commands(
+        [
+            ("start", "Restart the conversation. Welcome message."),
+            ("narrator", "Chat with the narrator in groups."),
+        ],
+        language_code="en",
+    )
+    await application.bot.set_my_commands(
+        [
+            ("iniciar", "Reinicia a conversa. Mensagem de boas vindas."),
+            ("narrador", "Conversa com o narrador em grupos."),
+        ],
+        language_code="pt",
+    )
+
+
 if __name__ == "__main__":
-    application = ApplicationBuilder().token(BOT_TOKEN).build()
+    application = ApplicationBuilder().token(BOT_TOKEN).post_init(post_init).build()
     start_handler = CommandHandler(["start", "iniciar"], start)
     narrator_command = CommandHandler(["narrador", "narrator"], reply)
     messageHanlder = MessageHandler(
