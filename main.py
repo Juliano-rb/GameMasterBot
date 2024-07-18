@@ -27,13 +27,13 @@ database = Database()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatid = update.effective_chat.id
-    chat_history = database.get(chatid)
-    if not chat_history:
-        database.set(chatid, [])
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text="Cleaned chat history.",
-        )
+
+    database.set(chatid, [])
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="Cleaned chat history.",
+    )
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
