@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import os
 from database import Database
 from gemini import GeminiClient
+from helpers.load_prompt import load_prompt
 
 load_dotenv()
 
@@ -45,6 +46,8 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message.text
     chatid = update.effective_chat.id
     chat_history = database.get(chatid)
+    if not chat_history:
+        chat_history = [{"role": "user", "content": load_prompt("default")}]
 
     try:
         response, updated_history = gemini.chat(message, history_data=chat_history)
