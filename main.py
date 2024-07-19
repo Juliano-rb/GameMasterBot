@@ -13,6 +13,7 @@ import os
 from database import Database
 from gemini import GeminiClient
 from helpers.load_prompt import load_prompt
+from chatgpt_md_converter import telegram_format
 
 load_dotenv()
 
@@ -51,8 +52,11 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         response, updated_history = gemini.chat(message, history_data=chat_history)
+        formatted_response = telegram_format(response)
         database.set(chatid, updated_history)
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id, text=formatted_response, parse_mode="HTML"
+        )
     except Exception as e:
         logging.error(e)
         await context.bot.send_message(

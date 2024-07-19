@@ -2,3 +2,4 @@ google-generativeai==0.4.1
 python-dotenv==1.0.1
 python-telegram-bot
 supabase
+chatgpt-md-converter
