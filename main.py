@@ -46,12 +46,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message.text
     chatid = update.effective_chat.id
+    from_name = (
+        update.message.from_user.first_name + " " + update.message.from_user.name
+    )
     chat_history = database.get(chatid)
     if not chat_history:
         chat_history = [{"role": "user", "content": load_prompt("default")}]
 
+    message_header = f"new message from: {from_name}\n------\n"
+
     try:
-        response, updated_history = gemini.chat(message, history_data=chat_history)
+        response, updated_history = gemini.chat(
+            message_header + message, history_data=chat_history
+        )
         formatted_response = telegram_format(response)
         database.set(chatid, updated_history)
         await context.bot.send_message(
