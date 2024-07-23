@@ -13,6 +13,7 @@ It can be added to a group chat and will command the group chat to play RPG.
 - [x] Use simple system prompt on `/start`;
 - [x] Transform markdown text to telegram format (telegram uses a special sintax);
 - [ ] Better introduction message on `/start` command;
+- [ ] Improove readme with instruction on how to run project;
 - [ ] Allow user to choose between more complex system prompts (different worlds and setting);
 - [ ] Transparency about Gemini quotas and the possibility for the user to use the `flash` model. Ex: Better error messages; Automatic switch to flash and warnings; Quota logging;
 - [ ] Return history options as buttons to user;
