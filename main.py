@@ -64,6 +64,12 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(
             chat_id=update.effective_chat.id, text=formatted_response, parse_mode="HTML"
         )
+    except ResourceExhausted:
+        logging.error(f"Gemini quota has been exhausted. Chat: {chatid}")
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Gemini quota has been exhausted. Try again later.",
+        )
     except Exception as e:
         logging.error(e)
         await context.bot.send_message(
