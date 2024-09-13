@@ -17,5 +17,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Welcome to Game Master Bot. I can run RPG campaigns for you. \n\nJust reply this message with your commands.",
+        text=(
+            "Welcome to Game Master Bot. I can run RPG campaigns for you. \n\n"
+            "/start clean chat history to start a new campaing. \n\n"
+            "Just reply this message with your commands to start roleplaying."
+        ),
     )
