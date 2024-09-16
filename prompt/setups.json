@@ -1,0 +1,42 @@
+[
+  {
+    "id": "Marvel",
+    "Game": "Marvel Heroic Roleplaying",
+    "Books": "Any Marvel commit book",
+    "Role": "Game Master",
+    "Theme": "Superhero Adventures in New York City",
+    "Tonality": "Lighthearted & Action-Packed",
+    "Characters": "Ask Players to describe their characters",
+    "Description": "Marvel Heroic Roleplaying"
+  },
+  {
+    "id": "DungeonNDragons",
+    "Game": "Dungeons & Dragons: 5th Edition",
+    "Books": "Any Random Campaign Book",
+    "Role": "Dungeon Master",
+    "Theme": "High Fantasy",
+    "Tonality": "Whimsical & Heroic",
+    "Characters": "Ask Players to describe their characters",
+    "Description": "Dungeons & Dragons: 5th Edition"
+  },
+  {
+    "id": "StarWars",
+    "Game": "Star Wars Roleplaying Game",
+    "Books": "Any Random Campaign Book",
+    "Role": "Game Master",
+    "Theme": "Rebellion vs. Empire",
+    "Tonality": "Action-Packed",
+    "Characters": "Ask Players to describe their characters",
+    "Description": "Star Wars"
+  },
+  {
+    "id": "HarryPotter",
+    "Game": "Fate Core System",
+    "Books": "None",
+    "Role": "Storyteller",
+    "Theme": "World of Harry Potter, specifically Hogwarts the school of Witchcraft and Wizardry",
+    "Tonality": "Mystical & Adventurous",
+    "Characters": "Ask Players to describe their characters",
+    "Description": "Harry Potter"
+  }
+]

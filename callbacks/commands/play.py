@@ -7,15 +7,16 @@ from database import Database
 from gemini import GeminiClient
 from chatgpt_md_converter import telegram_format
 from google.api_core.exceptions import ResourceExhausted
-from prompt.prompt import get_template_configs
+from prompt.prompt import load_prompt
 
 
-async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def play(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message.text
     chatid = update.effective_chat.id
     from_name = (
         update.message.from_user.first_name + " " + update.message.from_user.name
     )
+    user_language = update.message.from_user.language_code
 
     await context.bot.send_chat_action(chat_id=chatid, action=ChatAction.TYPING)
 
@@ -23,22 +24,18 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     gemini = GeminiClient()
 
     chat_history = database.get(chatid)
-    if not chat_history:
-        options_text = "".join(
-            [
-                f"- /{item['id']} - <b>{item['Description']}</b>\n"
-                for item in get_template_configs()
-            ]
-        )
+    if chat_history:
+        chat_history = []
+        database.set(chatid, chat_history)
+
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=(
-                "Choose one of the themes below to start your campaign:\n\n"
-                + options_text
-            ),
-            parse_mode="HTML",
+            text="Cleaned chat history.",
         )
-        return
+
+    prompt = load_prompt(message, user_language)
+    print(prompt)
+    chat_history = [{"role": "user", "content": prompt}]
 
     message_header = f"new message from: {from_name}\n------\n"
 
