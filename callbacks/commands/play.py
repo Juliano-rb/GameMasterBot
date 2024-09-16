@@ -1,7 +1,7 @@
 import logging
 from typing import Callable
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import CallbackContext
 from telegram.constants import ChatAction
 from database import Database
 from gemini import GeminiClient
@@ -10,13 +10,17 @@ from google.api_core.exceptions import ResourceExhausted
 from prompt.prompt import load_prompt
 
 
-async def play(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message = update.message.text
+async def play(update: Update, context: CallbackContext):
+    query = update.callback_query
+    await query.answer()
+
     chatid = update.effective_chat.id
     from_name = (
-        update.message.from_user.first_name + " " + update.message.from_user.name
+        update.callback_query.from_user.first_name
+        + " "
+        + update.callback_query.from_user.name
     )
-    user_language = update.message.from_user.language_code
+    user_language = update.callback_query.from_user.language_code
 
     await context.bot.send_chat_action(chat_id=chatid, action=ChatAction.TYPING)
 
@@ -33,15 +37,14 @@ async def play(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text="Cleaned chat history.",
         )
 
-    prompt = load_prompt(message, user_language)
+    prompt = load_prompt(query.data, user_language)
     print(prompt)
-    chat_history = [{"role": "user", "content": prompt}]
 
     message_header = f"new message from: {from_name}\n------\n"
 
     try:
         response, updated_history = gemini.chat(
-            message_header + message, history_data=chat_history
+            message_header + prompt, history_data=chat_history
         )
         formatted_response = telegram_format(response)
         database.set(chatid, updated_history)

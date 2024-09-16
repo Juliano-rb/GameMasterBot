@@ -4,6 +4,7 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     filters,
+    CallbackQueryHandler,
 )
 from dotenv import load_dotenv
 import os
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     message_hanlder = MessageHandler(
         filters.TEXT & (~filters.COMMAND), all_messages_handler
     )
-    play_game_handler = CommandHandler(commands, play)
+    play_game_handler = CallbackQueryHandler(play)
 
     application.add_handler(start_handler)
     application.add_handler(narrator_command)

@@ -1,6 +1,9 @@
 import logging
-from typing import Callable
-from telegram import Update
+from telegram import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Update,
+)
 from telegram.ext import ContextTypes
 from telegram.constants import ChatAction
 from database import Database
@@ -24,19 +27,18 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     chat_history = database.get(chatid)
     if not chat_history:
-        options_text = "".join(
-            [
-                f"- /{item['id']} - <b>{item['Description']}</b>\n"
-                for item in get_template_configs()
-            ]
-        )
+
+        keyboard = [
+            [InlineKeyboardButton(text=item["Description"], callback_data=item["id"])]
+            for item in get_template_configs()
+        ]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=(
-                "Choose one of the themes below to start your campaign:\n\n"
-                + options_text
-            ),
+            text=("Choose one of the themes below to start your campaign:\n\n"),
             parse_mode="HTML",
+            reply_markup=reply_markup,
         )
         return
 
