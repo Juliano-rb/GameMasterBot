@@ -3,8 +3,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from telegram.constants import ChatAction
 from chatgpt_md_converter import telegram_format
-from database import Database
-from gemini import GeminiClient
+from services.database import Database
+from services.gemini_api import GeminiClient
 from prompt.prompt import get_template_configs
 from google.api_core.exceptions import ResourceExhausted
 

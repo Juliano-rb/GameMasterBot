@@ -2,8 +2,8 @@ import logging
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.constants import ChatAction
-from database import Database
-from gemini import GeminiClient
+from services.database import Database
+from services.gemini_api import GeminiClient
 from chatgpt_md_converter import telegram_format
 from google.api_core.exceptions import ResourceExhausted
 from prompt.prompt import load_prompt
