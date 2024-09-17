@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: 2024-09-17 19:40-0300\n"
+"PO-Revision-Date: 2024-09-17 19:50-0300\n"
+"Last-Translator: Juliano <EMAIL@ADDRESS>\n"
+"Language-Team: English <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: C:\Users\Juliano\repos\gemini-chat\handlers\callbacks.py:60
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:71
+msgid "Cleaned chat history."
+msgstr "Cleaned chat history."
+
+#: C:\Users\Juliano\repos\gemini-chat\handlers\callbacks.py:80
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:58
+msgid "An error occurred:"
+msgstr "An error occurred:"
+
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:37
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:85
+msgid "Choose one of the worlds below to start your campaign:"
+msgstr "Choose one of the worlds below to start your campaign:"
+
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:37
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:85
+msgid "(Prompts from: rpgprompts.com)"
+msgstr "(Prompts from: rpgprompts.com)"
+
+#: C:\Users\Juliano\repos\gemini-chat\handlers\command.py:84
+msgid "Welcome to Game Master Bot. I can run RPG campaigns for you."
+msgstr "Welcome to Game Master Bot. I can run RPG campaigns for you."

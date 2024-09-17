@@ -5,6 +5,7 @@ from telegram.constants import ChatAction
 from chatgpt_md_converter import telegram_format
 from services.database import Database
 from services.gemini_api import GeminiClient
+from services.i18n import get_locale
 from prompt.prompt import get_adventure_options
 
 
@@ -14,6 +15,8 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     from_name = (
         update.message.from_user.first_name + " " + update.message.from_user.name
     )
+    user_language = update.message.from_user.language_code
+    _ = get_locale(user_language)
 
     await context.bot.send_chat_action(chat_id=chatid, action=ChatAction.TYPING)
 
@@ -31,7 +34,11 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup = InlineKeyboardMarkup(keyboard)
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=("Choose one of the worlds below to start your campaign:\n\n"),
+            text=(
+                _("Choose one of the worlds below to start your campaign:")
+                + "\n"
+                + _("(Prompts from: rpgprompts.com)")
+            ),
             parse_mode="HTML",
             reply_markup=reply_markup,
         )
@@ -52,7 +59,7 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.error(f"Error sending data to Gemini. Chat: {chatid}")
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f"An error occurred: {str(e)}",
+            text=_("An error occurred:") + str(e),
         )
 
 
@@ -60,12 +67,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     database = Database()
 
     chatid = update.effective_chat.id
+    user_language = update.message.from_user.language_code
+    _ = get_locale(user_language)
 
     database.set(chatid, [])
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Cleaned chat history.",
+        text=_("Cleaned chat history."),
     )
 
     keyboard = [
@@ -78,8 +87,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=(
-            "Welcome to Game Master Bot. I can run RPG campaigns for you. \n\n"
-            "Choose one of the worlds below to start your campaign"
+            _("Welcome to Game Master Bot. I can run RPG campaigns for you.")
+            + "\n\n"
+            + _("Choose one of the worlds below to start your campaign:")
+            + "\n"
+            + _("(Prompts from: rpgprompts.com)")
         ),
         parse_mode="HTML",
         reply_markup=reply_markup,

@@ -2,15 +2,14 @@ import logging
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.constants import ChatAction
-from services.database import Database
-from services.gemini_api import GeminiClient
-from chatgpt_md_converter import telegram_format
-from google.api_core.exceptions import ResourceExhausted
-from prompt.prompt import load_prompt
-
 from telegram.ext import (
     Application,
 )
+from chatgpt_md_converter import telegram_format
+from services.database import Database
+from services.gemini_api import GeminiClient
+from services.i18n import get_locale
+from prompt.prompt import load_prompt
 
 
 async def post_init_callback(application: Application) -> None:
@@ -41,6 +40,7 @@ async def play_callback(update: Update, context: CallbackContext):
         + update.callback_query.from_user.name
     )
     user_language = update.callback_query.from_user.language_code
+    _ = get_locale(user_language)
 
     await context.bot.send_chat_action(chat_id=chatid, action=ChatAction.TYPING)
 
@@ -54,7 +54,7 @@ async def play_callback(update: Update, context: CallbackContext):
 
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="Cleaned chat history.",
+            text=_("Cleaned chat history."),
         )
 
     prompt = load_prompt(query.data, user_language)
@@ -74,5 +74,5 @@ async def play_callback(update: Update, context: CallbackContext):
         logging.error(f"Error sending data to Gemini. Chat: {chatid}")
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=f"An error occurred: {str(e)}",
+            text=_("An error occurred:") + str(e),
         )
