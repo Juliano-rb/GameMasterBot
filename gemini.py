@@ -1,23 +1,13 @@
 import google.generativeai as genai
 from google.ai.generativelanguage_v1beta.types.content import Content, Part
-import os
 import pprint
+from config import GOOGLE_API_KEY, GEMINI_MODEL
 
 
 class GeminiClient:
-    # _instances = None
-
-    # def __new__(cls, model_name=None):
-    #     print("##################################################", model_name)
-    #     if cls._instance is None:
-    #         cls._instance = super().__new__(cls)
-    #     return cls._instance
-
     def __init__(self, model_name=None):
-        self.api_key = os.getenv("GOOGLE_API_KEY")
-        self.model_name = (
-            model_name or os.getenv("GEMINI_MODEL") or "gemini-1.5-flash-latest"
-        )
+        self.api_key = GOOGLE_API_KEY
+        self.model_name = model_name or GEMINI_MODEL or "gemini-1.5-flash-latest"
         print(f"Using Gemini model: {self.model_name}")
         genai.configure(api_key=self.api_key)
         self.safety_settings = [

@@ -1,5 +1,5 @@
-import os
 from supabase import create_client, Client
+from config import SUPABASE_KEY, SUPABASE_URL
 
 
 class Database:
@@ -11,8 +11,6 @@ class Database:
         return cls._instance
 
     def __init__(self):
-        SUPABASE_URL = os.getenv("SUPABASE_URL")
-        SUPABASE_KEY = os.getenv("SUPABASE_KEY")
         self.supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
     def get(self, chatid):

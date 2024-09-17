@@ -6,15 +6,11 @@ from telegram.ext import (
     filters,
     CallbackQueryHandler,
 )
-from dotenv import load_dotenv
-import os
 from callbacks import all_messages_handler, post_init
 from callbacks.commands import play, start, reply
 from prompt.prompt import get_template_configs_ids
+from config import BOT_TOKEN
 
-load_dotenv()
-
-BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
