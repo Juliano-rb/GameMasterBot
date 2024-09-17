@@ -2,6 +2,8 @@ import google.generativeai as genai
 from google.ai.generativelanguage_v1beta.types.content import Content, Part
 import pprint
 from config import GOOGLE_API_KEY, GEMINI_MODEL
+import logging
+from google.api_core.exceptions import ResourceExhausted
 
 
 class GeminiClient:
@@ -54,6 +56,7 @@ class GeminiClient:
                 safety_settings=self.safety_settings,
             )
         except Exception as e:
+            logging.error(e)
             raise e
 
         return response.text
@@ -94,5 +97,9 @@ class GeminiClient:
             )
 
             return response.text, self.history_to_dict(chat_instance.history)
+        except ResourceExhausted as e:
+            logging.error(e)
+            raise Exception("Gemini quota has been exhausted.")
         except Exception as e:
-            raise e
+            logging.error(e)
+            raise Exception("Unknow error when sending message to Gemini.")
