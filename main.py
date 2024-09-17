@@ -6,8 +6,10 @@ from telegram.ext import (
     filters,
     CallbackQueryHandler,
 )
-from callbacks import all_messages_handler, post_init
-from callbacks.commands import play, start, reply
+
+from handlers.message import any_message_handler
+from handlers.callbacks import play_callback, post_init_callback
+from handlers.command import start, reply
 from prompt.prompt import get_template_configs_ids
 from config import BOT_TOKEN
 
@@ -18,16 +20,18 @@ logging.basicConfig(
 
 
 if __name__ == "__main__":
-    application = ApplicationBuilder().token(BOT_TOKEN).post_init(post_init).build()
+    application = (
+        ApplicationBuilder().token(BOT_TOKEN).post_init(post_init_callback).build()
+    )
 
-    commands = get_template_configs_ids()
+    bot_commands = get_template_configs_ids()
 
     start_handler = CommandHandler(["start", "iniciar"], start)
     narrator_command = CommandHandler(["narrador", "narrator"], reply)
     message_hanlder = MessageHandler(
-        filters.TEXT & (~filters.COMMAND), all_messages_handler
+        filters.TEXT & (~filters.COMMAND), any_message_handler
     )
-    play_game_handler = CallbackQueryHandler(play)
+    play_game_handler = CallbackQueryHandler(play_callback)
 
     application.add_handler(start_handler)
     application.add_handler(narrator_command)

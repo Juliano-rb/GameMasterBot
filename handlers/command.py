@@ -1,16 +1,12 @@
 import logging
-from telegram import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Update,
-)
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from telegram.constants import ChatAction
+from chatgpt_md_converter import telegram_format
 from database import Database
 from gemini import GeminiClient
-from chatgpt_md_converter import telegram_format
-from google.api_core.exceptions import ResourceExhausted
 from prompt.prompt import get_template_configs
+from google.api_core.exceptions import ResourceExhausted
 
 
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -65,3 +61,33 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
             chat_id=update.effective_chat.id,
             text="Um erro ocorreu.",
         )
+
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    database = Database()
+
+    chatid = update.effective_chat.id
+
+    database.set(chatid, [])
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="Cleaned chat history.",
+    )
+
+    keyboard = [
+        [InlineKeyboardButton(text=item["Description"], callback_data=item["id"])]
+        for item in get_template_configs()
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=(
+            "Welcome to Game Master Bot. I can run RPG campaigns for you. \n\n"
+            "Choose one of the themes below to start your campaign"
+        ),
+        parse_mode="HTML",
+        reply_markup=reply_markup,
+    )

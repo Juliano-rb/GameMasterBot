@@ -1,5 +1,4 @@
 import logging
-from typing import Callable
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.constants import ChatAction
@@ -9,8 +8,29 @@ from chatgpt_md_converter import telegram_format
 from google.api_core.exceptions import ResourceExhausted
 from prompt.prompt import load_prompt
 
+from telegram.ext import (
+    Application,
+)
 
-async def play(update: Update, context: CallbackContext):
+
+async def post_init_callback(application: Application) -> None:
+    await application.bot.set_my_commands(
+        [
+            ("start", "Restart the conversation. Welcome message."),
+            ("narrator", "Chat with the narrator in groups."),
+        ],
+        language_code="en",
+    )
+    await application.bot.set_my_commands(
+        [
+            ("iniciar", "Reinicia a conversa. Mensagem de boas vindas."),
+            ("narrador", "Conversa com o narrador em grupos."),
+        ],
+        language_code="pt",
+    )
+
+
+async def play_callback(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
 
@@ -38,7 +58,6 @@ async def play(update: Update, context: CallbackContext):
         )
 
     prompt = load_prompt(query.data, user_language)
-    print(prompt)
 
     message_header = f"new message from: {from_name}\n------\n"
 

@@ -1,9 +1,9 @@
-from callbacks.commands import reply
+from handlers.command import reply
 from telegram import Update
 from telegram.ext import ContextTypes
 
 
-async def all_messages_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def any_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message.text
     reply_to_message = update.message.reply_to_message
     is_reply_to_me = (
