@@ -10,7 +10,7 @@ from telegram.ext import (
 from handlers.message import any_message_handler
 from handlers.callbacks import play_callback, post_init_callback
 from handlers.command import start, reply
-from prompt.prompt import get_template_configs_ids
+from prompt.prompt import get_adventure_options_ids
 from config import BOT_TOKEN
 
 
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         ApplicationBuilder().token(BOT_TOKEN).post_init(post_init_callback).build()
     )
 
-    bot_commands = get_template_configs_ids()
+    bot_commands = get_adventure_options_ids()
 
     start_handler = CommandHandler(["start", "iniciar"], start)
     narrator_command = CommandHandler(["narrador", "narrator"], reply)

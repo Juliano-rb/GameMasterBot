@@ -5,8 +5,7 @@ from telegram.constants import ChatAction
 from chatgpt_md_converter import telegram_format
 from services.database import Database
 from services.gemini_api import GeminiClient
-from prompt.prompt import get_template_configs
-from google.api_core.exceptions import ResourceExhausted
+from prompt.prompt import get_adventure_options
 
 
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -26,13 +25,13 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         keyboard = [
             [InlineKeyboardButton(text=item["Description"], callback_data=item["id"])]
-            for item in get_template_configs()
+            for item in get_adventure_options()
         ]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text=("Choose one of the themes below to start your campaign:\n\n"),
+            text=("Choose one of the worlds below to start your campaign:\n\n"),
             parse_mode="HTML",
             reply_markup=reply_markup,
         )
@@ -71,7 +70,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
         [InlineKeyboardButton(text=item["Description"], callback_data=item["id"])]
-        for item in get_template_configs()
+        for item in get_adventure_options()
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -80,7 +79,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id=update.effective_chat.id,
         text=(
             "Welcome to Game Master Bot. I can run RPG campaigns for you. \n\n"
-            "Choose one of the themes below to start your campaign"
+            "Choose one of the worlds below to start your campaign"
         ),
         parse_mode="HTML",
         reply_markup=reply_markup,

@@ -10,7 +10,7 @@ class GeminiClient:
     def __init__(self, model_name=None):
         self.api_key = GOOGLE_API_KEY
         self.model_name = model_name or GEMINI_MODEL or "gemini-1.5-flash-latest"
-        print(f"Using Gemini model: {self.model_name}")
+        logging.info(f"Using Gemini model: {self.model_name}")
         genai.configure(api_key=self.api_key)
         self.safety_settings = [
             {

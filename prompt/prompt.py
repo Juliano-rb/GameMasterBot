@@ -16,31 +16,33 @@ def read_json_as_dict(file_path):
         return json.load(file)
 
 
-def load_prompt(template_id: int, language: str):
+def load_prompt(adventure_id: int, language: str):
     prompt_template = read_file_as_string("template.txt")
-    setups = read_json_as_dict("setups.json")
-    template_config = next((config for config in setups if config["id"] == template_id))
+    adventures = read_json_as_dict("adventure_options.json")
+    adventure_data = next(
+        (config for config in adventures if config["id"] == adventure_id)
+    )
 
-    prompt_template = prompt_template.replace("${{game}}", template_config["Game"])
-    prompt_template = prompt_template.replace("${{books}}", template_config["Books"])
-    prompt_template = prompt_template.replace("${{role}}", template_config["Role"])
-    prompt_template = prompt_template.replace("${{theme}}", template_config["Theme"])
+    prompt_template = prompt_template.replace("${{game}}", adventure_data["Game"])
+    prompt_template = prompt_template.replace("${{books}}", adventure_data["Books"])
+    prompt_template = prompt_template.replace("${{role}}", adventure_data["Role"])
+    prompt_template = prompt_template.replace("${{theme}}", adventure_data["Theme"])
     prompt_template = prompt_template.replace(
-        "${{tonality}}", template_config["Tonality"]
+        "${{tonality}}", adventure_data["Tonality"]
     )
     prompt_template = prompt_template.replace(
-        "${{characters}}", template_config["Characters"]
+        "${{characters}}", adventure_data["Characters"]
     )
     prompt_template = prompt_template.replace("${{language}}", language)
 
     return prompt_template
 
 
-def get_template_configs():
-    setups = read_json_as_dict("setups.json")
-    return setups
+def get_adventure_options():
+    adventure_options = read_json_as_dict("adventure_options.json")
+    return adventure_options
 
 
-def get_template_configs_ids():
-    setups = read_json_as_dict("setups.json")
-    return [config["id"] for config in setups]
+def get_adventure_options_ids():
+    adventure_options = read_json_as_dict("adventure_options.json")
+    return [config["id"] for config in adventure_options]
