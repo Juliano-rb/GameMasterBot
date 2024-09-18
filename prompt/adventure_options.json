@@ -20,6 +20,16 @@
     "Description": "Dungeons & Dragons: 5th Edition"
   },
   {
+    "id": "GameOfThrones",
+    "Game": "A Song of Ice and Fire Roleplaying",
+    "Books": "A Song of Ice and Fire series by George R.R. Martin",
+    "Role": "Storyteller",
+    "Theme": "Political Intrigue and War in Westeros",
+    "Tonality": "Dark, Gritty, and Realistic",
+    "Characters": "Ask Players to describe their characters, focusing on noble lineage, allegiances, and ambitions",
+    "Description": "Game of Thrones"
+  },
+  {
     "id": "StarWars",
     "Game": "Star Wars Roleplaying Game",
     "Books": "Any Random Campaign Book",
@@ -38,5 +48,25 @@
     "Tonality": "Mystical & Adventurous",
     "Characters": "Ask Players to describe their characters",
     "Description": "Harry Potter"
+  },
+  {
+    "id": "Naruto",
+    "Game": "Fate Core System",
+    "Books": "Naruto Shippuden",
+    "Role": "Storyteller",
+    "Theme": "World of Naruto, focusing on the Hidden Leaf Village's ninja life and challenges",
+    "Tonality": "Action-Packed & Emotional",
+    "Characters": "Ask Players to describe their characters",
+    "Description": "Naruto Shippuden"
+  },
+  {
+    "id": "Bridgerton",
+    "Game": "Good Society: A Jane Austen Roleplaying Game",
+    "Books": "Core Rulebook",
+    "Role": "Facilitator",
+    "Theme": "Regency-era society of Bridgerton, focusing on the complex social dynamics, romantic entanglements, and dramatic turns found in high society life.",
+    "Tonality": "Romantic & Dramatic",
+    "Characters": "Ask Players to describe their characters",
+    "Description": "Bridgerton"
   }
 ]
