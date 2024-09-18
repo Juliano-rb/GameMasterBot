@@ -1,5 +1,7 @@
-from supabase import create_client, Client
-from config import SUPABASE_KEY, SUPABASE_URL
+from config import DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_PORT
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from services.model.chat_history import ChatHistory
 
 
 class Database:
@@ -11,7 +13,10 @@ class Database:
         return cls._instance
 
     def __init__(self):
-        self.supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        self.engine = create_engine(
+            f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
+            echo=True,
+        )
 
     def get(self, chatid):
         """
@@ -23,15 +28,13 @@ class Database:
         Returns:
             list: The chat history, as a list of dicts.
         """
-        response = (
-            self.supabase.table("chat_history")
-            .select("*")
-            .eq("chatid", chatid)
-            .execute()
-        )
+        Session = sessionmaker(bind=self.engine)
+        session = Session()
 
-        if response.data:
-            return response.data[0]["history"]
+        chat_history = session.query(ChatHistory).filter_by(chatid=chatid).first()
+
+        if chat_history:
+            return chat_history.history
         return None
 
     def set(self, chatid, history):
@@ -42,7 +45,16 @@ class Database:
             chatid (int): The chat id.
             history (list): The chat history, as a list of dicts.
         """
+        Session = sessionmaker(bind=self.engine)
+        session = Session()
 
-        self.supabase.table("chat_history").upsert(
-            {"chatid": chatid, "history": history},
-        ).execute()
+        existing_chat_history = (
+            session.query(ChatHistory).filter_by(chatid=chatid).first()
+        )
+
+        if existing_chat_history:
+            existing_chat_history.history = history
+        else:
+            chat_history = ChatHistory(chatid=chatid, history=history)
+            session.add(chat_history)
+        session.commit()
